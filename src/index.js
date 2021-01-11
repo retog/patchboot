@@ -38,6 +38,7 @@ ssbConnect().then(sbot => {
         pull.collect(function (err, values) {
           if (err) throw err
           document.getElementById('title-ext').innerHTML = app.name
+          if (document.getElementById('info')) document.getElementById('info').classList.add('hidden');
           const code = values.join('')
           window.setTimeout(() => {
             const outerHead = document.getElementsByTagName('head')[0]

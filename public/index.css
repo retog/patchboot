@@ -125,11 +125,6 @@ body {
   padding: 0.5rem;
 }
 
-.image {
-  margin: 1rem;
-  max-height: 30vh;
-}
-
 .hidden {
   display: none;
 }
