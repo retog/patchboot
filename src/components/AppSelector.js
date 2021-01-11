@@ -27,39 +27,23 @@ class AppSelector extends HTMLElement {
       box-sizing: border-box;
       overflow-wrap: anywhere;
     }
-    
-    
     app-controller {
       --spacing: 0.5rem;
       --lineColor: var(--lineColor2);
     }
-    
-    
     #apps {
-      transition: all 0.5s ease-in-out;
-      border-bottom: 1px solid var(--lineColor1);
       border-radius: 0;
       padding: 0;
       min-height: 1rem;
-      display: flex;
-      flex-wrap: wrap;
       max-height: 90vh;
       overflow-y: auto;
     }
-    
-    #apps>* {
-      width: calc(50% - 1rem);
-    }
-    
     .block {
       border: 1px solid var(--lineColor2);
       border-radius: 0.5rem;
       margin: 0.5rem;
       padding: 0.5rem;
     }
-    
-
-    
     .show-only-liked app-controller:not(.liked) {
       display: none;
     }

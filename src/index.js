@@ -3,9 +3,21 @@ import './components/AppSelector'
 import './components/SourceViewer'
 import { default as pull } from 'pull-stream'
 
+const sidebarToggle = document.getElementById('toggle-apps')
+if (sidebarToggle) sidebarToggle.addEventListener('click', e => {
+  document.getElementById('sidebar').classList.toggle('gone')
+})
+
+setTimeout(() => {
+  document.body.classList.add('waited')
+}, 1000)
+
 const selectionArea = document.getElementById('app-selection')
 ssbConnect().then(sbot => {
-  
+
+  if (document.getElementById('connecting')) document.getElementById('connecting').classList.add('hidden');
+  if (document.getElementById('info')) document.getElementById('info').classList.remove('hidden');
+
   const selector = document.createElement('app-selector')
   selector.sbot = sbot
   selector.addEventListener('run', run)
@@ -25,7 +37,7 @@ ssbConnect().then(sbot => {
         sbot.blobs.get(blobId),
         pull.collect(function (err, values) {
           if (err) throw err
-          document.getElementById('title-ext').innerHTML = ' - Running: ' + app.name
+          document.getElementById('title-ext').innerHTML = app.name
           const code = values.join('')
           window.setTimeout(() => {
             const outerHead = document.getElementsByTagName('head')[0]
