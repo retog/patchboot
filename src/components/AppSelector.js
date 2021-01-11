@@ -1,0 +1,154 @@
+import './AppController'
+import { VotesManager } from '../VotesManager.js'
+import { default as pull, paraMap, collect } from 'pull-stream'
+
+class AppSelector extends HTMLElement {
+  constructor() {
+    super();
+  }
+  connectedCallback() {
+    const controllerArea = this.attachShadow({ mode: 'open' })
+    const view = document.getElementById('view')
+    const opts = {
+      reverse: true,
+      query: [
+        {
+          $filter: {
+            value: {
+              content: { type: 'patchboot-app' }
+            }
+          }
+        }
+      ]
+    }
+    controllerArea.innerHTML = `
+    <style>
+    * {
+      box-sizing: border-box;
+      overflow-wrap: anywhere;
+    }
+    
+    
+    app-controller {
+      --spacing: 0.5rem;
+      --lineColor: var(--lineColor2);
+    }
+    
+    
+    #apps {
+      transition: all 0.5s ease-in-out;
+      border-bottom: 1px solid var(--lineColor1);
+      border-radius: 0;
+      padding: 0;
+      min-height: 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    
+    #apps>* {
+      width: calc(50% - 1rem);
+    }
+    
+    .block {
+      border: 1px solid var(--lineColor2);
+      border-radius: 0.5rem;
+      margin: 0.5rem;
+      padding: 0.5rem;
+    }
+    
+
+    
+    .show-only-liked app-controller:not(.liked) {
+      display: none;
+    }
+    </style>
+    <label><input type="checkbox" id="showLiked" />Show only apps I like</label>`
+    const appsGrid = document.createElement('div')
+    appsGrid.id = 'apps'
+    controllerArea.appendChild(appsGrid)
+
+    const showLikedcheckbox = controllerArea.getElementById('showLiked')
+    showLikedcheckbox.addEventListener('change', (e) => {
+      if (showLikedcheckbox.checked) {
+        appsGrid.classList.add('show-only-liked')
+      } else {
+        appsGrid.classList.remove('show-only-liked')
+      }
+
+    })
+
+    let headObserver = null;
+    const sbot = this.sbot
+    pull(sbot.query.read(opts), pull.drain((msg) => {
+      if (!msg.value) {
+        return;
+      }
+      if (msg.value.content.type !== 'patchboot-app') {
+        throw "unexpected type"
+      }
+      ensureNotRevoked(sbot, msg).then(() => {
+        const controller = document.createElement('app-controller');
+        controller.msg = msg
+        controller.sbot = sbot
+        appsGrid.append(controller);
+        const blobId = msg.value.content.link || msg.value.content.mentions[0].link;
+        controller.addEventListener('run', () => {
+          this.dispatchEvent(new CustomEvent('run', {detail: msg.value.content}))
+        });
+        controller.addEventListener('view-source', () => {
+          this.dispatchEvent(new CustomEvent('show-source', {detail: msg.value.content}))
+        })
+        controller.addEventListener('like', async () => {
+          try {
+            console.log(await votesManager.getVotes(msg.key));
+          } catch (e) {
+            console.log('error', e);
+          }
+          return true
+        })
+        controller.addEventListener('unlike', () => {
+          //vote(msg.key, 0)
+        })
+      }).catch(() => { })
+    }))
+
+  }
+}
+
+function ensureNotRevoked(sbot, msg) {
+  return new Promise((resolve, reject) => {
+    const options = {
+      reverse: true,
+      query: [
+        {
+          $filter: {
+            value: {
+              content: {
+                about: msg.key,
+                type: 'about',
+                status: 'revoked'
+              }
+            }
+          }
+        }
+      ],
+      limit: 1
+    }
+    pull(sbot.query.read(options), pull.collect((err, revocations) => {
+      if (err) {
+        reject(err)
+      } else {
+        if (revocations.length > 0) {
+          reject()
+        } else {
+          resolve()
+        }
+      }
+    }))
+  })
+}
+
+
+customElements.define("app-selector", AppSelector)

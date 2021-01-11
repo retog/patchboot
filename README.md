@@ -10,6 +10,10 @@ PatchBoot allows executing (small) apps retrieved via ssb. These patchboot apps 
 
 PatchBoot is available in different flavours. Choose the PatchBoot flavour that best fits your needs.
 
+### PatchBoot Scuttle Browser
+
+This version can be accessed with a browser that has the Scuttle Shell Browser extension installed. This version is contained in this repository as a large part of its code can also be used in the other flavours.
+
 ### PatchBoot Electron
 
 PatchBoot Electron provides a PatchBoot environment as a Desktop Application. This is the easiest option as it doesn't require configuration of the ssb-server or the browser.

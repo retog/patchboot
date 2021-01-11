@@ -1,0 +1,31 @@
+{
+  "name": "patchboot",
+  "version": "1.0.0",
+  "description": "A Scuttlebutt bootloader",
+  "main": "main.js",
+  "scripts": {
+    "serve": "http-server ./public",
+    "build": "rollup -c",
+    "watch": "rollup -c --watch"
+  },
+  "repository": "https://github.com/retog/patchboot",
+  "keywords": [
+    "Scuttlebutt",
+    "ssb"
+  ],
+  "author": "Reto Gmür",
+  "license": "MIT",
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^17.0.0",
+    "@rollup/plugin-node-resolve": "^11.0.1",
+    "http-server": "^0.12.3",
+    "rollup": "^2.36.1",
+    "rollup-plugin-sourcemaps": "^0.6.3"
+  },
+  "dependencies": {
+    "prismjs": "^1.21.0",
+    "pull-stream": "^3.6.14",
+    "rollup-plugin-sourcemaps": "^0.6.3",
+    "scuttle-shell-browser-consumer": "file:../scuttle-shell-browser/consumer"
+  }
+}
