@@ -184,24 +184,32 @@ class SourceViewer extends HTMLElement {
     const header = document.createElement('div')
     root.appendChild(header)
     header.classList.add('header')
-
-
     header.innerText = 'View source: ' + this.name
+
+    const loading = document.createElement('div')
+    root.appendChild(loading)
+    loading.classList.add('loading')
+    loading.innerText = 'Loading...'
+
     const main = document.createElement('div')
     root.appendChild(main)
     main.classList.add('main')
     const pre = document.createElement('pre')
     main.appendChild(pre)
+    console.log(`Wanting ${this.blobId}`)
     this.sbot.blobs.want(this.blobId).then(() => {
+      console.log(`Wanted ${this.blobId}`)
+      root.removeChild(loading)
       pull(
         this.sbot.blobs.get(this.blobId),
         pull.collect(function (err, values) {
           if (err) throw err
+          console.log(values)
           const code = values.join('')
           const html = highlight(code, languages.javascript, 'javascript');
           pre.innerHTML = html
         }))
-    })
+    }, console.warn)
     const footer = document.createElement('div')
     root.appendChild(footer)
     footer.classList.add('footer')

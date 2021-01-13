@@ -74,9 +74,9 @@ ssbConnect().then(sbot => {
     //const inner = document.createElement('div')
     const sourceViewer = document.createElement('source-viewer')
     sourceViewer.id = 'inner'
-    sourceViewer.blobId = app.link
+    sourceViewer.blobId = app.link || app.mentions[0].link
     sourceViewer.sbot = sbot
-    sourceViewer.name = app.name
+    sourceViewer.name = app.name || app.mentions[0].name || app.comment || ''
     outer.appendChild(sourceViewer)
     const close = () => {
       document.body.removeChild(outer)

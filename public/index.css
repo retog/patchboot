@@ -21,7 +21,7 @@ body {
 
 #sidebar {
   flex-shrink: 0;
-  width: 200px;
+  width: 248px;
   border-right: 1px solid var(--lineColor1);
   height: 100vh;
   display: flex;
@@ -36,7 +36,7 @@ body {
 }
 
 #sidebar-inner {
-  width: 199px;
+  width: 247px;
 }
 
 #connecting {

@@ -35,20 +35,19 @@ class AppSelector extends HTMLElement {
       border-radius: 0;
       padding: 0;
       min-height: 1rem;
-      max-height: 90vh;
-      overflow-y: auto;
-    }
-    .block {
-      border: 1px solid var(--lineColor2);
-      border-radius: 0.5rem;
-      margin: 0.5rem;
-      padding: 0.5rem;
+      max-height: 100%;
+      overflow-y: scroll;
     }
     .show-only-liked app-controller:not(.liked) {
       display: none;
     }
+    .top {
+      border-bottom: 1px solid gray;
+      width: 100%;
+      display: block;
+    }
     </style>
-    <label><input type="checkbox" id="showLiked" />Show only apps I like</label>`
+    <label class="top"><input type="checkbox" id="showLiked" />Show only apps I like</label>`
     const appsGrid = document.createElement('div')
     appsGrid.id = 'apps'
     controllerArea.appendChild(appsGrid)
