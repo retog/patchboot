@@ -1,5 +1,6 @@
 import ssbConnect from 'scuttle-shell-browser-consumer'
 import './components/AppSelector'
+import './components/AppRunner'
 import './components/SourceViewer'
 import { default as pull } from 'pull-stream'
 
@@ -13,40 +14,17 @@ ssbConnect().then(sbot => {
   selectionArea.appendChild(selector)
   
   const view = document.getElementById('view')
-  const shadowView = view.attachShadow({ mode: 'closed' });
-  const shadowHtml = document.createElement('html')
-  shadowView.appendChild(shadowHtml)
+  //const shadowView = view.attachShadow({ mode: 'closed' });
+  //const shadowHtml = document.createElement('html')
+  //shadowView.appendChild(shadowHtml)
   let headObserver = null;
   function run(event) {
     const app = event.detail
-    const blobId = app.link
-    sbot.blobs.want(blobId).then(() => {
-      pull(
-        sbot.blobs.get(blobId),
-        pull.collect(function (err, values) {
-          if (err) throw err
-          document.getElementById('title-ext').innerHTML = ' - Running: ' + app.name
-          const code = values.join('')
-          window.setTimeout(() => {
-            const outerHead = document.getElementsByTagName('head')[0]
-            const config = { attributes: false, childList: true, subtree: false }
-            const callback = function (mutationsList, observer) {
-              mutationsList.forEach(mutation => {
-                mutation.addedNodes.forEach(n => shadowHtml.getElementsByTagName('head')[0].appendChild(n))
-              })
-            }
-            if (headObserver) {
-              headObserver.disconnect()
-            }
-            headObserver = new MutationObserver(callback);
-            headObserver.observe(outerHead, config);
-            const fun = new Function('document','root', 'ssb', 'sbot', 'pull', code);
-            shadowHtml.innerHTML = '';
-            shadowHtml.createElement = document.createElement
-            fun(document, shadowHtml.getElementsByTagName('body')[0], cb => cb(undefined,sbot), sbot, pull);
-          }, 0)
-        }))
-    })
+    view.innerHTML = ''
+    const appRunner = document.createElement('app-runner')
+    appRunner.sbot = sbot
+    appRunner.app = app
+    view.appendChild(appRunner)
   }
   function showSource(event) {
     const app = event.detail
