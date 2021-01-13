@@ -89,6 +89,7 @@ ssbConnect().then(sbot => {
     }
     outer.addEventListener('click', close)
     sourceViewer.addEventListener('close', close)
+    sourceViewer.addEventListener('click', e => e.stopPropagation())
   }
 },
 error => {

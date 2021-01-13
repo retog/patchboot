@@ -80,6 +80,7 @@ class AppController extends HTMLElement {
 
   .actions {
     display: flex;
+    margin-left: 6px;
   }
 
   .actions button {
@@ -148,7 +149,7 @@ class AppController extends HTMLElement {
     </div>
     <div class="actions">
       <button id="like" class="svghover hidden count">
-        <svg viewBox="0 0 24 24">
+        <svg width="24" viewBox="0 0 24 24">
           <path fill="currentColor"
             d="M12.1,18.55L12,18.65L11.89,18.55C7.14,14.24 4,11.39 4,8.5C4,6.5 5.5,5 7.5,5C9.04,5 10.54,6 11.07,7.36H12.93C13.46,6 14.96,5 16.5,5C18.5,5 20,6.5 20,8.5C20,11.39 16.86,14.24 12.1,18.55M16.5,3C14.76,3 13.09,3.81 12,5.08C10.91,3.81 9.24,3 7.5,3C4.42,3 2,5.41 2,8.5C2,12.27 5.4,15.36 10.55,20.03L12,21.35L13.45,20.03C18.6,15.36 22,12.27 22,8.5C22,5.41 19.58,3 16.5,3Z" />
           <path class="onhover" fill="currentColor"
@@ -156,7 +157,7 @@ class AppController extends HTMLElement {
         </svg>
       </button>
       <button id="unlike" class="svghover hidden count">
-        <svg viewBox="0 0 24 24">
+        <svg width="24" viewBox="0 0 24 24">
           <path fill="currentColor"
             d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z" />
           <path class="onhover" fill="currentColor"
@@ -164,7 +165,7 @@ class AppController extends HTMLElement {
         </svg>
       </button>
       <button id="run">
-        <svg viewBox="0 0 24 24">
+        <svg width="24" viewBox="0 0 24 24">
           <path fill="currentColor" d="M8,5.14V19.14L19,12.14L8,5.14Z" />
         </svg>
       </button>
@@ -178,13 +179,13 @@ class AppController extends HTMLElement {
     </div>
     <div class="actions">
       <button id="revoke" class="hidden">
-        <svg viewBox="0 0 24 24">
+        <svg width="24" viewBox="0 0 24 24">
           <path fill="currentColor"
             d="M8.27,3L3,8.27V15.73L8.27,21H15.73L21,15.73V8.27L15.73,3M8.41,7L12,10.59L15.59,7L17,8.41L13.41,12L17,15.59L15.59,17L12,13.41L8.41,17L7,15.59L10.59,12L7,8.41" />
         </svg>
       </button>
       <button id="source">
-        <svg viewBox="0 0 24 24">
+        <svg width="24" viewBox="0 0 24 24">
           <path fill="currentColor"
             d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M6.12,15.5L9.86,19.24L11.28,17.83L8.95,15.5L11.28,13.17L9.86,11.76L6.12,15.5M17.28,15.5L13.54,11.76L12.12,13.17L14.45,15.5L12.12,17.83L13.54,19.24L17.28,15.5Z" />
         </svg>
