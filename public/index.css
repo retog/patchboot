@@ -5,8 +5,8 @@
 
 html {
   background-color: #ffffff;
-  font-family: 'Arial Narrow Bold', sans-serif;
-  --lineColor1: #00838f;
+  font-family: Inter, 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  --lineColor1: #79cfd9;
   --lineColor2: #b0bec5;
 }
 
@@ -27,11 +27,13 @@ body {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  transition: width 0.5s ease-in-out;
+  transition: width 0.3s ease-in-out, margin-left 0.3s ease-in-out;
+  background: #ffffff;
 }
 
 #sidebar.gone {
   width: 0px;
+  margin-left: -1px;
 }
 
 #sidebar-inner {
@@ -40,6 +42,40 @@ body {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+}
+
+#close-apps {
+  display: none;
+}
+
+@media screen and (max-width: 400px) {
+  #close-apps {
+    display: block;
+  }
+
+  #sidebar {
+    position: absolute;
+    top: 0;
+    right: 0vw;
+    bottom: 0;
+    left: 0;
+    width: unset;
+    border: none;
+    transition: right 0.3s ease-in-out;
+    box-shadow: -5px 0 10px 0 black;
+    z-index: 100;
+  }
+
+  #sidebar-inner {
+    width: 100vw;
+  }
+
+  #sidebar.gone {
+    width: unset;
+    margin: 0;
+    right: 100vw;
+    transition: right 0.3s ease-in-out;
+  }
 }
 
 #connecting {
@@ -81,9 +117,11 @@ body {
   border-radius: 0;
   padding: 0.5rem;
   background: #e0f7fa;
+  background: #79cfd9;
   display: flex;
   justify-content: space-between;
-  height: 36px;
+  height: 45px;
+  line-height: 28px;
 }
 
 .bar h1 {
@@ -93,20 +131,31 @@ body {
   padding: 0;
 }
 
+#title-ext {
+  font-weight: 500;
+}
+
 .icons {
   display: flex;
 }
 
 .icons button {
+  margin: 0 2px;
+  padding: 6px;
   border: none;
-  background: none;
-  margin: 0;
-  padding: 0;
+  border-radius: 50%;
+  height: 28px;
+  background-color: rgba(0,0,0,0.027450980392156863);
 }
 
-.icons svg {
-  height: 1rem;
+.icons button:hover {
+  background-color: rgba(0,0,0,0.13333333333333334);
+}
+
+.icons button svg {
   display: block;
+  height: 16px;
+  width: 16px;
 }
 
 .svghover .onhover {
@@ -179,7 +228,6 @@ body {
   flex: 1;
 }
 
-
 .modal-open {
   overflow: hidden;
   max-height: 100vh;
@@ -190,14 +238,14 @@ app-selector {
   display: flex;
   flex-direction: column;
   flex: 0 auto;
-  max-height: calc(100vh - 36px);
+  max-height: calc(100vh - 45px);
 }
 
 .main {
   display: flex;
   flex-direction: column;
   max-height: 100vh;
-  min-width: 36px;
+  min-width: 45px;
   overflow: hidden;
 }
 

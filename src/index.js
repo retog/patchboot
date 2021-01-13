@@ -7,6 +7,10 @@ const sidebarToggle = document.getElementById('toggle-apps')
 if (sidebarToggle) sidebarToggle.addEventListener('click', e => {
   document.getElementById('sidebar').classList.toggle('gone')
 })
+const sidebarClose = document.getElementById('close-apps')
+if (sidebarClose) sidebarClose.addEventListener('click', e => {
+  document.getElementById('sidebar').classList.add('gone')
+})
 
 setTimeout(() => {
   document.body.classList.add('waited')

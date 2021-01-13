@@ -88,6 +88,11 @@ class AppController extends HTMLElement {
     border: none;
     border-radius: 50%;
     height: 36px;
+    background-color: #f8f8f8;
+  }
+
+  .actions button:hover {
+    background-color: #dddddd;
   }
 
   .actions button svg {
@@ -125,10 +130,14 @@ class AppController extends HTMLElement {
     line-height: 13px;
     font-weight: 600;
     padding: 0 0 4px 4px;
-    border-bottom-left-radius: 18px;
-    border-top-right-radius: 6px;
+    border-top-right-radius: 4px;
     /* color: #ff2f92; */
     background-color: #f8f8f8;
+    background: linear-gradient(45deg, rgba(255,255,255,0) 0%, #f8f8f8 100%);
+  }
+
+  .count[data-count]:hover::before {
+    background: linear-gradient(45deg, rgba(255, 255, 255, 0) 50%, rgba(221, 221, 221, 1) 100%);
   }
 </style>
 <div id="app">
