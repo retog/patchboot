@@ -12,7 +12,7 @@ setTimeout(() => {
   document.body.classList.add('waited')
 }, 1000)
 
-const selectionArea = document.getElementById('app-selection')
+const selectionArea = document.getElementById('sidebar-inner')
 ssbConnect().then(sbot => {
 
   if (document.getElementById('connecting')) document.getElementById('connecting').classList.add('hidden');

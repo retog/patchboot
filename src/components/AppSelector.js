@@ -85,7 +85,7 @@ class AppSelector extends HTMLElement {
         })
         controller.addEventListener('like', async () => {
           try {
-            console.log(await votesManager.getVotes(msg.key));
+            console.log(await VotesManager.getVotes(msg.key));
           } catch (e) {
             console.log('error', e);
           }
