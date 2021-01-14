@@ -28,19 +28,26 @@ ssbConnect().then(sbot => {
   selector.addEventListener('show-source', showSource)
   selectionArea.appendChild(selector)
   
+  const statusBar = document.getElementById('status')
+  
   const view = document.getElementById('view')
   const shadowView = view.attachShadow({ mode: 'closed' });
   const shadowHtml = document.createElement('html')
   shadowView.appendChild(shadowHtml)
   let headObserver = null;
+
   function run(event) {
     const app = event.detail
+    if (document.getElementById('info')) document.getElementById('info').classList.add('hidden');
+    statusBar.classList.remove('hidden')
+    statusBar.innerText = 'Loading ' + app.name
     const blobId = app.link
     sbot.blobs.want(blobId).then(() => {
       pull(
         sbot.blobs.get(blobId),
         pull.collect(function (err, values) {
           if (err) throw err
+          statusBar.classList.add('hidden')
           document.getElementById('title-ext').innerHTML = app.name
           if (document.getElementById('info')) document.getElementById('info').classList.add('hidden');
           const code = values.join('')

@@ -171,17 +171,25 @@ body {
 }
 
 #info {
-  transition: all 0.5s ease-in-out;
+  transition: all 0.3s ease-in-out;
   max-height: 90vh;
   overflow-y: auto;
   padding: 0.5rem;
+}
+
+#status {
+  max-height: 90vh;
+  padding: 0.5rem;
+  background: #def3f6;
+  transform: all 0.3s ease-in-out;
 }
 
 .hidden {
   display: none;
 }
 
-#info.hidden {
+#info.hidden
+#status.hidden {
   max-height: 0 !important;
   border: none;
   padding: 0;
