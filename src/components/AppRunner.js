@@ -19,10 +19,15 @@ class AppRunner extends HTMLElement {
         pull.collect((err, values) => {
           if (err) throw err
           const code = values.join('')
-          const utf8Encode = new TextEncoder()
+          function utf8_to_b64(str) {
+            return btoa(unescape(encodeURIComponent(str)));
+          }
           const iFrameContent = `
           <!DOCTYPE html>
           <html>
+          <head>
+          <title>Pathcboot app</title>
+          </head>
           <body>
 
             <div id="patchboot-app">
@@ -30,8 +35,7 @@ class AppRunner extends HTMLElement {
             </div>
 
             <script type="module">
-              import {default as ssbConnect, pull} from 'http://localhost:9090/ssb-connect.js' //'https://retog.github.io/scuttle-shell-browser/ssb-connect.js'
-              console.log('connecting',ssbConnect)
+              import {default as ssbConnect, pull} from 'https://retog.github.io/scuttle-shell-browser/ssb-connect.js'
               ssbConnect().then(sbot => {
                 window.sbot = sbot
                 window.root = document.getElementById('patchboot-app')
@@ -39,7 +43,7 @@ class AppRunner extends HTMLElement {
                 window.root.innerHTML = ''
                 const script = document.createElement('script')
                 script.defer = true
-                script.src = 'data:text/javascript;base64,${btoa(utf8Encode.encode(code))}'
+                script.src = 'data:text/javascript;base64,${utf8_to_b64(code)}'
                 document.head.append(script)
               },
               error => {
@@ -72,7 +76,6 @@ class AppRunner extends HTMLElement {
           }
 
           function ping() {
-            console.log('pinging')
             iFrame.contentWindow.postMessage({
               direction: "from-content-script",
               action: 'ping'
@@ -80,10 +83,6 @@ class AppRunner extends HTMLElement {
           }
 
           iFrame.contentWindow.addEventListener("message", (event) => {
-            console.log('also got msg', event.source, event.source === window)
-          })
-          iFrame.contentWindow.addEventListener("message", (event) => {
-            console.log('got msg', event)
             if (event.data && event.data.direction === "from-page-script") {
                 if (event.data.action === "ping") {
                   ping()
@@ -101,34 +100,28 @@ class AppRunner extends HTMLElement {
                 }
               }
             })
-          const toPage = function sink(done) {
-            return function (source) {
-              source(null, function more (end,data) {
-                iFrame.contentWindow.postMessage({
-                  direction: "from-content-script",
-                  message: data
-                }, '*');
-                source(null, more)
-              })
-            }
-          }
-          //console.log('starting RPC')
-          function logger(text) {
-            return pull.map((v) => {
-              console.log(text,v)
-              return v
+          const toPage = function (source) {
+            source(null, function more (end,data) {
+              iFrame.contentWindow.postMessage({
+                direction: "from-content-script",
+                message: data
+              }, '*');
+              source(null, more)
             })
           }
+          /*function logger(text) {
+            return pull.map((v) => {
+              console.log(text,v)
+              console.log(new TextDecoder("utf-8").decode(v))
+              return v
+            })
+          }*/
           this.sbot.manifest().then(manifest => {
             //console.log('manifest', JSON.stringify(manifest))
             const asyncManifest = asyncifyManifest(manifest)
-            this.sbot.manifest = function () {
-              return manifest
-            }
             const server = MRPC(null, asyncManifest) (this.sbot)
             const serverStream = server.createStream(() => {console.log('closed')})
-            pull(fromPage, logger('from page'), serverStream, logger('to page'), toPage)
-            console.log('connected')
+            pull(fromPage, serverStream, toPage)
           })
         })
       )
@@ -142,8 +135,7 @@ function asyncifyManifest(manifest) {
   for (let k in manifest) {
     var value = manifest[k]
     // Rewrite re-exported sync methods as async,
-    // except for manifest method, as we define it later
-    if (value === 'sync' && k !== 'manifest') {
+    if (value === 'sync') {
       value = 'async'
     }
     asyncified[k] = value
