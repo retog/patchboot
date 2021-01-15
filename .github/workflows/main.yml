@@ -25,7 +25,6 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
         run: |
-          cd consumer
           npm install
           npm run build
           
@@ -34,4 +33,4 @@ jobs:
         env:
           EMAIL: reto@factsmission.com
           GH_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-          BUILD_DIR: consumer/site
+          BUILD_DIR: public
