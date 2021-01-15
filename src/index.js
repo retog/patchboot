@@ -47,8 +47,12 @@ ssbConnect().then(sbot => {
     appRunner.sbot = sbot
     appRunner.app = app
     view.appendChild(appRunner)
-    appRunner.addEventListener('ready',() => statusBar.classList.add('hidden'))
+
+    appRunner.addEventListener('loaded', e => {
+      statusBar.classList.add('hidden')
+    })
   }
+
   function showSource(event) {
     const app = event.detail
     console.log('showSource', app)

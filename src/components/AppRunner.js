@@ -12,12 +12,14 @@ class AppRunner extends HTMLElement {
   connectedCallback() {
     const runnerArea = this.attachShadow({ mode: 'open' })
     const iFrame = document.createElement('iframe')
+    iFrame.style = "width: 100%; height: 100%; border: none;"
     const blobId = this.app.link
     this.sbot.blobs.want(blobId).then(() => {
       pull(
         this.sbot.blobs.get(blobId),
         pull.collect((err, values) => {
           if (err) throw err
+          this.dispatchEvent(new Event('loaded'))
           const code = values.join('')
           function utf8_to_b64(str) {
             return btoa(unescape(encodeURIComponent(str)));
@@ -26,13 +28,11 @@ class AppRunner extends HTMLElement {
           <!DOCTYPE html>
           <html>
           <head>
-          <title>Pathcboot app</title>
+          <title>Patchboot app</title>
           </head>
           <body>
 
-            <div id="patchboot-app">
-              If Scuttle Shell Browser is installed correctly and activated for this page, the PatchBoot App will appear here.
-            </div>
+            <div id="patchboot-app" style="padding-right: 8px; min-width: min-content;"></div>
 
             <script type="module">
               import {default as ssbConnect, pull} from './scuttle-shell-browser-consumer.js'
