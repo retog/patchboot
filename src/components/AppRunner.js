@@ -109,6 +109,7 @@ class AppRunner extends HTMLElement {
               source(null, more)
             })
           }
+          iFrame.contentWindow.addEventListener('load', () => this.dispatchEvent(new CustomEvent('ready')))
           /*function logger(text) {
             return pull.map((v) => {
               console.log(text,v)

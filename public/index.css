@@ -5,8 +5,8 @@
 
 html {
   background-color: #ffffff;
-  font-family: 'Arial Narrow Bold', sans-serif;
-  --lineColor1: #00838f;
+  font-family: Inter, 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  --lineColor1: #79cfd9;
   --lineColor2: #b0bec5;
 }
 
@@ -14,60 +14,182 @@ body {
   margin: 0;
 }
 
-#bar {
+.flex {
+  display: flex;
+  width: 100vw;
+}
+
+#sidebar {
+  flex-shrink: 0;
+  width: 248px;
+  border-right: 1px solid var(--lineColor1);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: width 0.3s ease-in-out, margin-left 0.3s ease-in-out;
+  background: #ffffff;
+}
+
+#sidebar.gone {
+  width: 0px;
+  margin-left: -1px;
+}
+
+#sidebar-inner {
+  width: 247px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+#close-apps {
+  display: none;
+}
+
+@media screen and (max-width: 400px) {
+  #close-apps {
+    display: block;
+  }
+
+  #sidebar {
+    position: absolute;
+    top: 0;
+    right: 0vw;
+    bottom: 0;
+    left: 0;
+    width: unset;
+    border: none;
+    transition: right 0.3s ease-in-out;
+    box-shadow: -5px 0 10px 0 black;
+    z-index: 100;
+  }
+
+  #sidebar-inner {
+    width: 100vw;
+  }
+
+  #sidebar.gone {
+    width: unset;
+    margin: 0;
+    right: 100vw;
+    transition: right 0.3s ease-in-out;
+  }
+}
+
+#connecting {
+  padding: 0 0.5rem;
+  animation: 1s infinite alternate ease-in-out loading-color;
+}
+
+@keyframes loading-color {
+  from {
+    color: black;
+  }
+  to {
+    color: var(--lineColor1);
+  }
+}
+
+#connecting p {
+  margin: 0.5rem 0;
+}
+
+#connecting .muted {
+  color: rgba(0,0,0,0);
+}
+
+.waited #connecting .muted {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.muted {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.main {
+  flex-grow: 1;
+}
+
+.bar {
   border-bottom: 1px solid var(--lineColor1);
   border-radius: 0;
   padding: 0.5rem;
   background: #e0f7fa;
+  background: #79cfd9;
   display: flex;
   justify-content: space-between;
+  height: 45px;
+  line-height: 28px;
 }
 
-#bar h1 {
+.bar h1 {
   display: block;
   font-size: 1rem;
   margin: 0;
-  padding: 0 0.5rem;
+  padding: 0;
 }
 
-#icons {
+#title-ext {
+  font-weight: 500;
+}
+
+.icons {
   display: flex;
 }
 
-#icons button {
+.icons button {
+  margin: 0 2px;
+  padding: 6px;
   border: none;
-  background: none;
-  margin: 0;
-  padding: 0 0.5rem;
+  border-radius: 50%;
+  height: 28px;
+  background-color: rgba(0,0,0,0.027450980392156863);
 }
 
-#icons svg {
-  height: 1rem;
+.icons button:hover {
+  background-color: rgba(0,0,0,0.13333333333333334);
+}
+
+.icons button svg {
   display: block;
+  height: 16px;
+  width: 16px;
+}
+
+.svghover .onhover {
+  display: none;
+}
+
+.svghover:hover path {
+  display: none;
+}
+
+.svghover:hover .onhover {
+  display: unset;
 }
 
 #info {
-  transition: all 0.5s ease-in-out;
-  border-bottom: 1px solid var(--lineColor1);
+  transition: all 0.3s ease-in-out;
   max-height: 90vh;
   overflow-y: auto;
-}
-
-
-.block {
-  border: 1px solid var(--lineColor2);
-  border-radius: 0.5rem;
-  margin: 0.5rem;
   padding: 0.5rem;
 }
 
-.notice {
-  border-color: var(--lineColor1);
-  background: #e0f7fa;
+#status {
+  max-height: 90vh;
+  padding: 0.5rem;
+  background: #def3f6;
+  transform: all 0.3s ease-in-out;
 }
 
-
 .hidden {
+  display: none;
+}
+
+#info.hidden
+#status.hidden {
   max-height: 0 !important;
   border: none;
   padding: 0;
@@ -83,7 +205,7 @@ body {
   bottom: 0;
   top: 0;
   padding: 2rem;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.2);
   height: 100vh;
   width: 100vw;
   max-height: 100vh;
@@ -95,12 +217,12 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 2rem;
   opacity: 1;
   height: 100%;
   width: 100%;
   max-height: 100%;
   max-width: 100%;
+  box-shadow: 4px 4px 12px -8px black;
 }
 
 #inner * {
@@ -114,10 +236,27 @@ body {
   flex: 1;
 }
 
-
 .modal-open {
   overflow: hidden;
   max-height: 100vh;
   max-width: 100vw;
 }
 
+app-selector {
+  display: flex;
+  flex-direction: column;
+  flex: 0 auto;
+  max-height: calc(100vh - 45px);
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  max-height: 100vh;
+  min-width: 45px;
+  overflow: hidden;
+}
+
+#view {
+  overflow: auto;
+}

@@ -9,33 +9,50 @@
 </head>
 
 <body>
-  <header id="bar">
-    <h1>PatchBoot <span id="title-ext" /></h1>
-    <div id="icons">
-      <button id="toggle-info">
-        <svg viewBox="0 0 24 24">
-          <path fill="currentColor"
-            d="M13,9H11V7H13M13,17H11V11H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" />
-        </svg>
-      </button>
-      <button id="toggle-apps">
-        <svg viewBox="0 0 24 24">
-          <path fill="currentColor"
-            d="M16,20H20V16H16M16,14H20V10H16M10,8H14V4H10M16,8H20V4H16M10,14H14V10H10M4,14H8V10H4M4,20H8V16H4M10,20H14V16H10M4,8H8V4H4V8Z" />
-        </svg>
-      </button>
-    </div>
-  </header>
-  <main>
-    <header id="info">
-      <div class="block notice">
-        <p>Click on an app you would like to execute - only execute apps you trust.</p>
+  <div class="flex">
+    <div id="sidebar">
+      <div id="sidebar-inner">
+        <header class="bar">
+          <h1>PatchBoot</h1>
+          <div class="icons">
+            <button id="close-apps">
+              <svg width="24" viewBox="0 0 24 24">
+                <path fill="currentColor" d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" />
+              </svg>
+            </button>
+          </div>
+        </header>
       </div>
-    </header>
-    <div id="app-selection"></div>
-    <div id="apps-area"></div>
-    <div id="view"></div>
-  </main>
+    </div>
+    <div class="main">
+      <header class="bar">
+        <div class="icons">
+          <button id="toggle-apps">
+            <svg width="24" viewBox="0 0 24 24">
+              <path fill="currentColor"
+                d="M16,20H20V16H16M16,14H20V10H16M10,8H14V4H10M16,8H20V4H16M10,14H14V10H10M4,14H8V10H4M4,20H8V16H4M10,20H14V16H10M4,8H8V4H4V8Z" />
+            </svg>
+          </button>
+        </div>
+        <h1 id="title-ext"></h1>
+        <div></div>
+      </header>
+      <div id="connecting">
+        <p>Connecting to SSB</p>
+        <p class="muted"><small>If nothing happens, please make sure you have an SSB server running and the plugin
+            intstalled.</small></p>
+      </div>
+      <div id="info" class="hidden">
+        <h2>No App is Running yet</h2>
+        <p>
+          Only execute apps you trust,
+          as they’ll have full access to your SSB account.
+        </p>
+      </div>
+      <div id="status" class="hidden"></div>
+      <div id="view"></div>
+    </div>
+  </div>
 
   <script type="module" src="https://retog.github.io/scuttle-shell-browser/ssb-connect.js"></script>
   <script type="module" src="./bundle.js"></script>
