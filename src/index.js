@@ -1,4 +1,4 @@
-import ssbConnect from 'scuttle-shell-browser-consumer'
+import ssbConnect from './scuttle-shell-browser-consumer.js'
 import './components/AppSelector'
 import './components/AppRunner'
 import './components/SourceViewer'

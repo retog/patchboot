@@ -35,7 +35,7 @@ class AppRunner extends HTMLElement {
             </div>
 
             <script type="module">
-              import {default as ssbConnect, pull} from 'https://retog.github.io/scuttle-shell-browser/ssb-connect.js'
+              import {default as ssbConnect, pull} from './scuttle-shell-browser-consumer.js'
               ssbConnect().then(sbot => {
                 window.sbot = sbot
                 window.root = document.getElementById('patchboot-app')
