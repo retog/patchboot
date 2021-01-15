@@ -1,6 +1,7 @@
 import { nodeResolve } from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
 import sourcemaps from 'rollup-plugin-sourcemaps'
+import globals from 'rollup-plugin-node-globals'
 
 export default {
   input: 'src/index.js',
@@ -11,9 +12,11 @@ export default {
   },
   plugins: [
     nodeResolve({
-      browser: true
+      browser: true,
+      preferBuiltins: false
     }),
     commonjs(),
+    globals(),
     sourcemaps()
   ]
 }
