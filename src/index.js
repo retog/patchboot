@@ -1,5 +1,6 @@
-import ssbConnect from 'scuttle-shell-browser-consumer'
+import ssbConnect from './scuttle-shell-browser-consumer.js'
 import './components/AppSelector'
+import './components/AppRunner'
 import './components/SourceViewer'
 import { default as pull } from 'pull-stream'
 
@@ -19,8 +20,8 @@ setTimeout(() => {
 const selectionArea = document.getElementById('sidebar-inner')
 ssbConnect().then(sbot => {
 
-  if (document.getElementById('connecting')) document.getElementById('connecting').classList.add('hidden');
-  if (document.getElementById('info')) document.getElementById('info').classList.remove('hidden');
+  if (document.getElementById('connecting')) document.getElementById('connecting').classList.add('hidden')
+  if (document.getElementById('info')) document.getElementById('info').classList.remove('hidden')
 
   const selector = document.createElement('app-selector')
   selector.sbot = sbot
@@ -31,46 +32,22 @@ ssbConnect().then(sbot => {
   const statusBar = document.getElementById('status')
   
   const view = document.getElementById('view')
-  const shadowView = view.attachShadow({ mode: 'closed' });
-  const shadowHtml = document.createElement('html')
-  shadowView.appendChild(shadowHtml)
-  let headObserver = null;
+  //const shadowView = view.attachShadow({ mode: 'closed' });
+  //const shadowHtml = document.createElement('html')
+  //shadowView.appendChild(shadowHtml)
 
   function run(event) {
     const app = event.detail
-    if (document.getElementById('info')) document.getElementById('info').classList.add('hidden');
+    document.getElementById('info').classList.add('hidden')
+    document.getElementById('title-ext').innerHTML = app.name
     statusBar.classList.remove('hidden')
     statusBar.innerText = 'Loading ' + app.name
-    const blobId = app.link
-    sbot.blobs.want(blobId).then(() => {
-      pull(
-        sbot.blobs.get(blobId),
-        pull.collect(function (err, values) {
-          if (err) throw err
-          statusBar.classList.add('hidden')
-          document.getElementById('title-ext').innerHTML = app.name
-          if (document.getElementById('info')) document.getElementById('info').classList.add('hidden');
-          const code = values.join('')
-          window.setTimeout(() => {
-            const outerHead = document.getElementsByTagName('head')[0]
-            const config = { attributes: false, childList: true, subtree: false }
-            const callback = function (mutationsList, observer) {
-              mutationsList.forEach(mutation => {
-                mutation.addedNodes.forEach(n => shadowHtml.getElementsByTagName('head')[0].appendChild(n))
-              })
-            }
-            if (headObserver) {
-              headObserver.disconnect()
-            }
-            headObserver = new MutationObserver(callback);
-            headObserver.observe(outerHead, config);
-            const fun = new Function('document','root', 'ssb', 'sbot', 'pull', code);
-            shadowHtml.innerHTML = '';
-            shadowHtml.createElement = document.createElement
-            fun(document, shadowHtml.getElementsByTagName('body')[0], cb => cb(undefined,sbot), sbot, pull);
-          }, 0)
-        }))
-    })
+    view.innerHTML = ''
+    const appRunner = document.createElement('app-runner')
+    appRunner.sbot = sbot
+    appRunner.app = app
+    view.appendChild(appRunner)
+    appRunner.addEventListener('ready',() => statusBar.classList.add('hidden'))
   }
   function showSource(event) {
     const app = event.detail
