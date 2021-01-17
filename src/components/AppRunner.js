@@ -74,7 +74,7 @@ class AppRunner extends HTMLElement {
               </html>
               `
               })
-        } else if (this.app.type === 'patchboot-app') {
+        } else if (this.app.type === 'patchboot-webapp') {
           return dereferenceUriOrSigil(this.app.link)
         } else {
           throw new Error('unsupported: '+this.app.type)

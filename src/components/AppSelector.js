@@ -15,7 +15,7 @@ class AppSelector extends HTMLElement {
         {
           $filter: {
             value: {
-              content: { type: 'patchboot-app' }
+              content: { type: {$in: ['patchboot-app','patchboot-webapp'] } }
             }
           }
         }
@@ -67,9 +67,6 @@ class AppSelector extends HTMLElement {
     pull(sbot.query.read(opts), pull.drain((msg) => {
       if (!msg.value) {
         return;
-      }
-      if (msg.value.content.type !== 'patchboot-app') {
-        throw "unexpected type"
       }
       ensureNotRevoked(sbot, msg).then(() => {
         const controller = document.createElement('app-controller');
