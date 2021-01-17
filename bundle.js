@@ -669,7 +669,7 @@ class IdentityManager {
   }
   /** returns a promise for the self-assigned name of the user */
   getSelfAssignedName(id) {
-    const opts = {
+    const queryOpts = {
       reverse: true,
       limit: 1,
       query: [{
@@ -690,9 +690,31 @@ class IdentityManager {
         }
       }]
     };
+    const backlinksOpts = {
+      reverse: true,
+      limit: 1,
+      query: [{
+        $filter: {
+          dest: id,
+          value: {
+            author: id,
+            content: {
+              type: 'about',
+              about: id,
+              name: { $is: 'string' }
+            }
+          }
+        }
+      },
+      {
+        $map: {
+          name: ['value', 'content', 'name']
+        }
+      }]
+    };
     return new Promise((resolve, reject) => {
       pullStream(
-        this.sbot.query.read(opts),
+        this.sbot.backlinks ? this.sbot.backlinks.read(backlinksOpts) : this.sbot.query.read(queryOpts),
         pullStream.collect((err, data) => {
           if (err) {
             reject(err);
@@ -1100,7 +1122,7 @@ class AppSelector extends HTMLElement {
 
 function ensureNotRevoked(sbot, msg) {
   return new Promise((resolve, reject) => {
-    const options = {
+    const queryOpts = {
       reverse: true,
       query: [
         {
@@ -1117,7 +1139,27 @@ function ensureNotRevoked(sbot, msg) {
       ],
       limit: 1
     };
-    pullStream(sbot.query.read(options), pullStream.collect((err, revocations) => {
+    const backlinksOpts = {
+      reverse: true,
+      query: [
+        {
+          $filter: {
+            dest: msg.key,
+            value: {
+              content: {
+                about: msg.key,
+                type: 'about',
+                status: 'revoked'
+              }
+            }
+          }
+        }
+      ],
+      limit: 1
+    };
+    pullStream(
+      sbot.backlinks ? sbot.backlinks.read(backlinksOpts) : sbot.query.read(queryOpts),
+      pullStream.collect((err, revocations) => {
       if (err) {
         reject(err);
       } else {
