@@ -4,7 +4,7 @@
 
 import { default as pull, paraMap, collect } from 'pull-stream'
 import MRPC from 'muxrpc'
-import fetch from 'isomorphic-fetch'
+import Util from '../Util';
 
 class AppRunner extends HTMLElement {
   constructor() {
@@ -12,81 +12,87 @@ class AppRunner extends HTMLElement {
   }
   connectedCallback() {
     const runnerArea = this.attachShadow({ mode: 'open' })
-    const iFrame = document.createElement('iframe')
-    iFrame.style = "width: 100%; height: 100%; border: none;"
-    const getBlob = (blobId) => {
-      return new Promise((resolve, reject) => {
-        this.sbot.blobs.want(blobId).then(() => {
-          pull(
-            this.sbot.blobs.get(blobId),
-            pull.collect((err, values) => {
-              if (err) reject(err)
-              const code = values.join('')
-              resolve(code)
-            })
-          )
-        })
+
+    const util = new Util(this.sbot)
+
+    const getClassicAppFrameContent = () => {
+      const blobId = this.app.link
+      return util.dereferenceUriOrSigil(blobId).then(code => {
+        function utf8_to_b64(str) {
+          return btoa(unescape(encodeURIComponent(str)));
+        }
+        return `
+          <!DOCTYPE html>
+          <html>
+          <head>
+          <title>Patchboot app</title>
+          </head>
+          <body>
+
+            <div id="patchboot-app" style="padding-right: 8px; min-width: min-content;">Connecting to SSB.</div>
+
+            <script type="module">
+              import {default as ssbConnect, pull} from './scuttle-shell-browser-consumer.js'
+              ssbConnect().then(sbot => {
+                window.sbot = sbot
+                window.root = document.getElementById('patchboot-app')
+                window.pull = pull
+                window.root.innerHTML = ''
+                const script = document.createElement('script')
+                script.defer = true
+                script.src = 'data:text/javascript;base64,${utf8_to_b64(code)}'
+                document.head.append(script)
+              },
+              error => {
+                console.log('An error occured', error)
+              })
+
+            </script>
+
+          </body>
+          </html>
+          `
+      })
+
+    }
+
+    const addBaseUrl = (htmlString) => htmlString.replace('</head>',`<base href="${this.app.link}"></head>`)
+
+    const getWebappContent = () => {
+      const link = this.app.link
+      // because of same originy policy we cab't just use original link
+      return util.dereferenceUriOrSigil(link).then(content => {
+        content = (link.startsWith('&') || link.startsWith('ssb')) ? content : addBaseUrl(content)
+        return content
       })
     }
-    const dereferenceUriOrSigil = (uriOrSigil) => {
-      if (uriOrSigil.startsWith('&')) {
-        return getBlob(uriOrSigil)
+
+    const getAppFrameContent = () => {
+      if (this.app.type === 'patchboot-app') {
+        return getClassicAppFrameContent()
+      } else if (this.app.type === 'patchboot-webapp') {
+        return getWebappContent()
       } else {
-        return fetch(uriOrSigil).then(response => response.text())
+        throw new Error('unsupported: ' + this.app.type)
       }
     }
-    const getFramecontent = () => {
-        if (this.app.type === 'patchboot-app') {
-          const blobId = this.app.link
-          return dereferenceUriOrSigil(blobId).then(code => {
-                function utf8_to_b64(str) {
-                  return btoa(unescape(encodeURIComponent(str)));
-                }
-                return `
-              <!DOCTYPE html>
-              <html>
-              <head>
-              <title>Patchboot app</title>
-              </head>
-              <body>
-    
-                <div id="patchboot-app" style="padding-right: 8px; min-width: min-content;"></div>
-    
-                <script type="module">
-                  import {default as ssbConnect, pull} from './scuttle-shell-browser-consumer.js'
-                  ssbConnect().then(sbot => {
-                    window.sbot = sbot
-                    window.root = document.getElementById('patchboot-app')
-                    window.pull = pull
-                    window.root.innerHTML = ''
-                    const script = document.createElement('script')
-                    script.defer = true
-                    script.src = 'data:text/javascript;base64,${utf8_to_b64(code)}'
-                    document.head.append(script)
-                  },
-                  error => {
-                    console.log('An error occured', error)
-                  })
-    
-                </script>
-    
-              </body>
-              </html>
-              `
-              })
-        } else if (this.app.type === 'patchboot-webapp') {
-          return dereferenceUriOrSigil(this.app.link)
-        } else {
-          throw new Error('unsupported: '+this.app.type)
-        }
+
+    const createIFrame = () => {
+      const iFrame = document.createElement('iframe')
+      runnerArea.appendChild(iFrame) // has to appended before contentWindow is accessed
+      iFrame.style = "width: 100%; height: 100%; border: none;"
+      return getAppFrameContent().then(iFrameContent => {
+        iFrame.contentWindow.document.open()
+        iFrame.contentWindow.document.write(iFrameContent)
+        iFrame.contentWindow.document.close()
+        return iFrame
+      })
     }
-    getFramecontent().then(iFrameContent => {
+    
+    createIFrame().then(iFrame => {
+      console.log(iFrame)
+      
       this.dispatchEvent(new Event('loaded'))
-      //console.log(iFrameContent)
-      runnerArea.appendChild(iFrame)
-      iFrame.contentWindow.document.open();
-      iFrame.contentWindow.document.write(iFrameContent);
-      iFrame.contentWindow.document.close();
 
       let messageDataCallback = null
       let messageDataBuffer = []
@@ -152,8 +158,8 @@ class AppRunner extends HTMLElement {
         pull(fromPage, serverStream, toPage)
       })
     })
-    
-  }  
+
+  }
 }
 
 function asyncifyManifest(manifest) {
