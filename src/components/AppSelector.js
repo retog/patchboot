@@ -15,6 +15,13 @@ class AppSelector extends HTMLElement {
         {
           $filter: {
             value: {
+              content: { type: {$prefix: 'patchboot-'} }
+            }
+          }
+        },
+        {
+          $filter: {
+            value: {
               content: { type: {$in: ['patchboot-app','patchboot-webapp'] } }
             }
           }
