@@ -56,7 +56,7 @@ class AppRunner extends HTMLElement {
 
     }
 
-    const addBaseUrl = (htmlString) => htmlString.replace('</head>',`<base href="${this.app.link}"></head>`)
+    const addBaseUrl = (htmlString) => htmlString.replace('<head>',`<head><base href="${this.app.link}">`)
 
     const getWebappContent = () => {
       const link = this.app.link
