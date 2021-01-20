@@ -1037,6 +1037,13 @@ class AppSelector extends HTMLElement {
         {
           $filter: {
             value: {
+              content: { type: {$prefix: 'patchboot-'} }
+            }
+          }
+        },
+        {
+          $filter: {
+            value: {
               content: { type: {$in: ['patchboot-app','patchboot-webapp'] } }
             }
           }
@@ -6257,7 +6264,7 @@ class AppRunner extends HTMLElement {
 
     };
 
-    const addBaseUrl = (htmlString) => htmlString.replace('</head>',`<base href="${this.app.link}"></head>`);
+    const addBaseUrl = (htmlString) => htmlString.replace('<head>',`<head><base href="${this.app.link}">`);
 
     const getWebappContent = () => {
       const link = this.app.link;
