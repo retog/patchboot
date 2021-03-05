@@ -8,7 +8,7 @@ class IdentityManager {
   }
   /** returns a promise for the self-assigned name of the user */
   getSelfAssignedName(id) {
-    const opts = {
+    const queryOpts = {
       reverse: true,
       limit: 1,
       query: [{
@@ -29,9 +29,31 @@ class IdentityManager {
         }
       }]
     }
+    const backlinksOpts = {
+      reverse: true,
+      limit: 1,
+      query: [{
+        $filter: {
+          dest: id,
+          value: {
+            author: id,
+            content: {
+              type: 'about',
+              about: id,
+              name: { $is: 'string' }
+            }
+          }
+        }
+      },
+      {
+        $map: {
+          name: ['value', 'content', 'name']
+        }
+      }]
+    }
     return new Promise((resolve, reject) => {
       pull(
-        this.sbot.query.read(opts),
+        this.sbot.backlinks ? this.sbot.backlinks.read(backlinksOpts) : this.sbot.query.read(queryOpts),
         collect((err, data) => {
           if (err) {
             reject(err);

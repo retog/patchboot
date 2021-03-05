@@ -28,6 +28,10 @@ on [git ssb](http://localhost:7718/%25i0elaPNUwbdizoEA0Vu882FgBpyopA1zJaf%2FyTIm
 
 ## Publishing PatchBoot Apps
 
+The are toe types of PatchBoot Apps, Classic Patchboot Apps that are single javascript-filed stored in a blob or Patchboot Webapps with have an HTML file as entrypoint.
+
+## Classic PatchBoot Apps
+
 Apps are advertised using mesages of the type `patchboot-app` like the followig
 
 ```
@@ -38,12 +42,29 @@ Apps are advertised using mesages of the type `patchboot-app` like the followig
     "link": "&CKrrSh72rXhgCzeTKekAPf7fiwtmNml/yFjXCe4ovnE=.sha256",
 }
 ```
-
 The link points to the JavaScript comprising the app. The JavaScript code has access to the following variables:
 
 - `sbot`: an [rpc connection](https://ssbc.github.io/scuttlebutt-protocol-guide/#rpc-protocol) to an sbot
 - `root`: the root of the shadow DOM
 - `pull`: the [pull-stream](https://github.com/pull-stream/pull-stream) function object
+
+## PatchtBoot Webapps
+
+Webapps are advertised as `patchboot-webapp`.
+
+```
+{
+    "type": "patchboot-webapp",
+    "name": "WomBat Launcher",
+    "comment": "A friendly new launcher",
+    "link": "ssb:blob:sha256:&CKrrSh72rXhgCzeTKekAPf7fiwtmNml/yFjXCe4ovnE=",
+}
+```
+
+The link point to an HTML app that can establish an RPC connection to an `sbot`-instance over window message events. These apps can also be used standalone if the browser is a able to access the URI provided in the link field and has the [Scuttle Shell Browser](https://github.com/retog/scuttle-shell-browser/) extension installed.
+
+The recommended way to develop webapps is by using `ssb-connect.js` provided by [Scuttle Shell Browser - Consumer](https://github.com/retog/scuttle-shell-browser/tree/master/consumer).
+
 
 ### PatchBoot Install
 

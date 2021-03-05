@@ -1,5 +1,6 @@
 import { highlight, languages } from 'prismjs';
 import { default as pull } from 'pull-stream'
+import Util from '../Util';
 
 class SourceViewer extends HTMLElement {
   constructor() {
@@ -217,23 +218,15 @@ pre[class*="language-"] {
     main.classList.add('code')
     const pre = document.createElement('pre')
     main.appendChild(pre)
-    this.sbot.blobs.want(this.blobId).then(() => {
-      indicator.classList.remove('loading')
-      indicator.classList.add('id')
-      indicator.innerText = this.blobId
-      pull(
-        this.sbot.blobs.get(this.blobId),
-        pull.collect(function (err, values) {
-          if (err) throw err
-          console.log(values)
-          const code = values.join('')
-          pre.innerText = code
-          requestAnimationFrame(() => {
-            const html = highlight(code, languages.javascript, 'javascript')
-            pre.innerHTML = html
-          })
-        }))
-    }, console.warn)
+    ;(new Util(this.sbot)).dereferenceUriOrSigil(this.app.link).then(code => {
+      pre.innerText = code
+      requestAnimationFrame(() => {
+        const html = this.app.type === 'patchboot-app' ?
+          highlight(code, languages.javascript, 'javascript') :
+          highlight(code, languages.html, 'html')
+        pre.innerHTML = html
+      })
+    })
   }
 }
 

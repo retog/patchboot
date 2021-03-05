@@ -15,7 +15,14 @@ class AppSelector extends HTMLElement {
         {
           $filter: {
             value: {
-              content: { type: 'patchboot-app' }
+              content: { type: {$prefix: 'patchboot-'} }
+            }
+          }
+        },
+        {
+          $filter: {
+            value: {
+              content: { type: {$in: ['patchboot-app','patchboot-webapp'] } }
             }
           }
         }
@@ -68,9 +75,6 @@ class AppSelector extends HTMLElement {
       if (!msg.value) {
         return;
       }
-      if (msg.value.content.type !== 'patchboot-app') {
-        throw "unexpected type"
-      }
       ensureNotRevoked(sbot, msg).then(() => {
         const controller = document.createElement('app-controller');
         controller.msg = msg
@@ -102,7 +106,7 @@ class AppSelector extends HTMLElement {
 
 function ensureNotRevoked(sbot, msg) {
   return new Promise((resolve, reject) => {
-    const options = {
+    const queryOpts = {
       reverse: true,
       query: [
         {
@@ -119,7 +123,27 @@ function ensureNotRevoked(sbot, msg) {
       ],
       limit: 1
     }
-    pull(sbot.query.read(options), pull.collect((err, revocations) => {
+    const backlinksOpts = {
+      reverse: true,
+      query: [
+        {
+          $filter: {
+            dest: msg.key,
+            value: {
+              content: {
+                about: msg.key,
+                type: 'about',
+                status: 'revoked'
+              }
+            }
+          }
+        }
+      ],
+      limit: 1
+    }
+    pull(
+      sbot.backlinks ? sbot.backlinks.read(backlinksOpts) : sbot.query.read(queryOpts),
+      pull.collect((err, revocations) => {
       if (err) {
         reject(err)
       } else {

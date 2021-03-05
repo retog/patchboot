@@ -1,4 +1,4 @@
-import ssbConnect from 'scuttle-shell-browser-consumer'
+import ssbConnect from './scuttle-shell-browser-consumer.js'
 import './components/AppSelector'
 import './components/AppRunner'
 import './components/SourceViewer'
@@ -38,8 +38,8 @@ setTimeout(() => {
 const selectionArea = document.getElementById('sidebar-inner')
 ssbConnect().then(sbot => {
 
-  if (document.getElementById('connecting')) document.getElementById('connecting').classList.add('hidden');
-  if (document.getElementById('info')) document.getElementById('info').classList.remove('hidden');
+  if (document.getElementById('connecting')) document.getElementById('connecting').classList.add('hidden')
+  if (document.getElementById('info')) document.getElementById('info').classList.remove('hidden')
 
   const selector = document.createElement('app-selector')
   selector.sbot = sbot
@@ -53,20 +53,19 @@ ssbConnect().then(sbot => {
   //const shadowView = view.attachShadow({ mode: 'closed' });
   //const shadowHtml = document.createElement('html')
   //shadowView.appendChild(shadowHtml)
-  let headObserver = null;
 
   function run(event) {
     const app = event.detail
-
-    if (document.getElementById('info')) document.getElementById('info').classList.add('hidden');
+    document.getElementById('info').classList.add('hidden')
+    document.getElementById('title-ext').innerHTML = app.name
     statusBar.classList.remove('hidden')
     statusBar.innerText = 'Loading ' + app.name
-
     view.innerHTML = ''
     const appRunner = document.createElement('app-runner')
     appRunner.sbot = sbot
     appRunner.app = app
     view.appendChild(appRunner)
+
     appRunner.addEventListener('loaded', e => {
       statusBar.classList.add('hidden')
     })
@@ -85,9 +84,9 @@ ssbConnect().then(sbot => {
     //const inner = document.createElement('div')
     const sourceViewer = document.createElement('source-viewer')
     sourceViewer.id = 'inner'
-    sourceViewer.blobId = app.link || app.mentions[0].link
+    sourceViewer.app = app
     sourceViewer.sbot = sbot
-    sourceViewer.name = app.name || app.mentions[0].name || app.comment || ''
+    sourceViewer.name = app.name || app.comment || ''
     outer.appendChild(sourceViewer)
     const close = () => {
       document.body.removeChild(outer)

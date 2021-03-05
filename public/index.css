@@ -122,10 +122,6 @@ body {
   color: rgba(0, 0, 0, 0.4);
 }
 
-.main {
-  flex-grow: 1;
-}
-
 .bar {
   border-bottom: 1px solid var(--lineColor1);
   border-radius: 0;
@@ -264,9 +260,10 @@ app-selector {
 }
 
 .main {
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
-  max-height: 100vh;
+  height: 100vh;
   min-width: 45px;
   overflow: hidden;
 }
