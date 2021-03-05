@@ -4,14 +4,32 @@ import './components/AppRunner'
 import './components/SourceViewer'
 import { default as pull } from 'pull-stream'
 
+const sidebar = document.getElementById('sidebar')
 const sidebarToggle = document.getElementById('toggle-apps')
-if (sidebarToggle) sidebarToggle.addEventListener('click', e => {
-  document.getElementById('sidebar').classList.toggle('gone')
-})
 const sidebarClose = document.getElementById('close-apps')
-if (sidebarClose) sidebarClose.addEventListener('click', e => {
-  document.getElementById('sidebar').classList.add('gone')
+const sidebarCloseBackdrop = document.getElementById('close-apps-backdrop')
+
+const closeSidebar = () => {
+  console.log('closing')
+  sidebar.classList.add('gone')
+  sidebarCloseBackdrop.classList.add('gone')
+  sidebarCloseBackdrop.removeEventListener('click', closeSidebar)
+}
+
+const openSidebar = () => {
+  console.log('opening')
+  sidebar.classList.remove('gone')
+  sidebarCloseBackdrop.classList.remove('gone')
+  sidebarCloseBackdrop.addEventListener('click', closeSidebar)
+}
+
+sidebarToggle.addEventListener('click', e => {
+  console.log('toggling', sidebar.classList, sidebar.classList.contains('gone') )
+  if (sidebar.classList.contains('gone')) openSidebar()
+  else closeSidebar()
 })
+sidebarClose.addEventListener('click', closeSidebar)
+sidebarCloseBackdrop.addEventListener('click', closeSidebar)
 
 setTimeout(() => {
   document.body.classList.add('waited')

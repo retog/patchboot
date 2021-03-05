@@ -8,6 +8,7 @@ html {
   font-family: Inter, 'Helvetica Neue', Arial, Helvetica, sans-serif;
   --lineColor1: #79cfd9;
   --lineColor2: #b0bec5;
+  --topBarHeight: 45px;
 }
 
 body {
@@ -44,19 +45,32 @@ body {
   overflow: hidden;
 }
 
-#close-apps {
+#close-apps,
+#close-apps-backdrop {
   display: none;
 }
 
-@media screen and (max-width: 480px) {
+@media screen and (max-width: 500px) {
   #close-apps {
     display: block;
+  }
+
+  #close-apps-backdrop {
+    display: block;
+    content: "";
+    position: absolute;
+    background: rgba(0, 0, 0, 0.2);
+    transition: width 0.3s ease-in-out;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
   }
 
   #sidebar {
     position: absolute;
     top: 0;
-    right: 0vw;
+    right: 16px;
     bottom: 0;
     left: 0;
     width: unset;
@@ -67,14 +81,14 @@ body {
   }
 
   #sidebar-inner {
-    width: 100vw;
+    width: calc(100vw - 16px);
   }
 
-  #sidebar.gone {
+  #sidebar.gone,
+  #close-apps-backdrop.gone {
     width: unset;
     margin: 0;
     right: 100vw;
-    transition: right 0.3s ease-in-out;
   }
 }
 
@@ -116,7 +130,7 @@ body {
   background: #79cfd9;
   display: flex;
   justify-content: space-between;
-  height: 45px;
+  height: var(--topBarHeight);
   line-height: 28px;
 }
 
@@ -257,6 +271,10 @@ app-selector {
 #view {
   height: 100%;
   overflow: hidden;
+}
+
+#view:empty {
+  height: 0;
 }
 
 app-runner {
