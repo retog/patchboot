@@ -1032,7 +1032,8 @@ class AppSelector extends HTMLElement {
     const controllerArea = this.attachShadow({ mode: 'open' });
     const view = document.getElementById('view');
     const opts = {
-      reverse: true,
+      live: true,
+      reverse: false,
       query: [
         {
           $filter: {
@@ -1099,7 +1100,7 @@ class AppSelector extends HTMLElement {
         const controller = document.createElement('app-controller');
         controller.msg = msg;
         controller.sbot = sbot;
-        appsGrid.append(controller);
+        appsGrid.insertBefore(controller, appsGrid.firstChild);
         const blobId = msg.value.content.link || msg.value.content.mentions[0].link;
         controller.addEventListener('run', () => {
           this.dispatchEvent(new CustomEvent('run', {detail: msg.value.content}));
@@ -1119,7 +1120,7 @@ class AppSelector extends HTMLElement {
           //vote(msg.key, 0)
         });
       }).catch(() => { });
-    }));
+    }, () => console.log('End of apps stream reached.')));
 
   }
 }
