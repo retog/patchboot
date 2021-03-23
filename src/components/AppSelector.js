@@ -11,7 +11,7 @@ class AppSelector extends HTMLElement {
     const view = document.getElementById('view')
     const opts = {
       live: true,
-      reverse: true,
+      reverse: false,
       query: [
         {
           $filter: {
@@ -80,7 +80,7 @@ class AppSelector extends HTMLElement {
         const controller = document.createElement('app-controller');
         controller.msg = msg
         controller.sbot = sbot
-        appsGrid.append(controller);
+        appsGrid.insertBefore(controller, appsGrid.firstChild);
         const blobId = msg.value.content.link || msg.value.content.mentions[0].link;
         controller.addEventListener('run', () => {
           this.dispatchEvent(new CustomEvent('run', {detail: msg.value.content}))
