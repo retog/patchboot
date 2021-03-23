@@ -10,6 +10,7 @@ class AppSelector extends HTMLElement {
     const controllerArea = this.attachShadow({ mode: 'open' })
     const view = document.getElementById('view')
     const opts = {
+      live: true,
       reverse: true,
       query: [
         {
@@ -99,7 +100,7 @@ class AppSelector extends HTMLElement {
           //vote(msg.key, 0)
         })
       }).catch(() => { })
-    }))
+    }, () => console.log('End of apps stream reached.')))
 
   }
 }
