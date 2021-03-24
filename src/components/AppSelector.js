@@ -1,4 +1,5 @@
 import './AppController'
+import './FollowScuttleboot'
 import { VotesManager } from '../VotesManager.js'
 import { default as pull, paraMap, collect } from 'pull-stream'
 
@@ -59,7 +60,18 @@ class AppSelector extends HTMLElement {
     const appsGrid = document.createElement('div')
     appsGrid.id = 'apps'
     controllerArea.appendChild(appsGrid)
-
+    this.sbot.whoami().then(keys => this.sbot.friends.isFollowing({
+      source: keys.id,
+      dest: '@luoZnBKHXeJl4kB39uIkZnQD4L0zl6Vd+Pe75gKS4fo=.ed25519'
+    })).then(followingSboot => {
+      if (!followingSboot) {
+        const followScuttleboot = document.createElement('follow-scuttleboot')
+        followScuttleboot.sbot = this.sbot
+        controllerArea.append(followScuttleboot)
+      } else {
+        console.log('Allready following scuttleboot.app')
+      }
+    });
     const showLikedcheckbox = controllerArea.getElementById('showLiked')
     showLikedcheckbox.addEventListener('change', (e) => {
       if (showLikedcheckbox.checked) {
