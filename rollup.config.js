@@ -7,13 +7,15 @@ import copy from 'rollup-plugin-copy'
 
 export default [
   {
-    input: 'src/index.js',
-    output: {
-      file: 'public/bundle.js',
-      format: 'es',
-      sourcemap: true
-    },
-    external: ['./scuttle-shell-browser-consumer.js'],
+    input: 'src/components/PatchBoot.js',
+    output: [
+      {
+        file: 'public/patch-boot.js',
+        format: 'es',
+        sourcemap: true
+      }
+    ],
+    external: ['../scuttle-shell-browser-consumer.js'],
     plugins: [
       builtins(),
       nodeResolve({

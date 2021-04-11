@@ -1,6 +1,6 @@
 import { highlight, languages } from 'prismjs';
 import { default as pull } from 'pull-stream'
-import Util from '../Util';
+import Util from '../Util.js';
 
 class SourceViewer extends HTMLElement {
   constructor() {

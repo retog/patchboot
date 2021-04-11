@@ -4,7 +4,7 @@
 
 import { default as pull, paraMap, collect } from 'pull-stream'
 import MRPC from 'muxrpc'
-import Util from '../Util';
+import Util from '../Util.js';
 
 class AppRunner extends HTMLElement {
   constructor() {

@@ -1,5 +1,5 @@
-import './AppController'
-import './FollowScuttleboot'
+import './AppController.js'
+import './FollowScuttleboot.js'
 import { VotesManager } from '../VotesManager.js'
 import { default as pull, paraMap, collect } from 'pull-stream'
 

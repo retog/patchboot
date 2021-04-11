@@ -2,7 +2,8 @@
   "name": "patchboot",
   "version": "1.0.0",
   "description": "A Scuttlebutt bootloader",
-  "main": "main.js",
+  "main": "public/patch-boot.js",
+  "module": "public/patch-boot.js",
   "scripts": {
     "serve": "http-server ./public",
     "build": "rollup -c",

@@ -1,4 +1,4 @@
 node_modules
-public/bundle.js
-public/bundle.js.map
+public/patch-boot.js
+public/patch-boot.js.map
 public/scuttle-shell-browser-consumer.js
