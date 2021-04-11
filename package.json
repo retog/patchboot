@@ -1,6 +1,6 @@
 {
   "name": "patchboot",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A Scuttlebutt bootloader",
   "main": "public/patch-boot.js",
   "module": "public/patch-boot.js",
