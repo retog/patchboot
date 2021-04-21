@@ -6285,7 +6285,7 @@ class AppRunner extends HTMLElement {
           </head>
           <body>
 
-            <div id="patchboot-app" style="padding-right: 8px; min-width: min-content;">Connecting to SSB.</div>
+            <div id="patchboot-app" style="min-width: min-content;"></div>
 
             <script type="module">
               import {default as ssbConnect, pull} from './scuttle-shell-browser-consumer.js'
