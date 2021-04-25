@@ -16,7 +16,14 @@ class FollowScuttleboot extends HTMLElement {
         "following": true,
         "contact": "@luoZnBKHXeJl4kB39uIkZnQD4L0zl6Vd+Pe75gKS4fo=.ed25519"
       }, console.log)
-      this.sbot.gossip.add('wss://scuttleboot.app~shs:luoZnBKHXeJl4kB39uIkZnQD4L0zl6Vd+Pe75gKS4fo=;net:scuttleboot.app:8088~shs:luoZnBKHXeJl4kB39uIkZnQD4L0zl6Vd+Pe75gKS4fo=', console.log)
+      const multiAddr = 'wss://scuttleboot.app~shs:luoZnBKHXeJl4kB39uIkZnQD4L0zl6Vd+Pe75gKS4fo=;net:scuttleboot.app:8088~shs:luoZnBKHXeJl4kB39uIkZnQD4L0zl6Vd+Pe75gKS4fo='
+      if (this.sbot.conn?.connect) {
+        this.sbot.conn.connect(multiAddr, console.log)
+      } else {
+        if (this.sbot.gossip?.add) {
+          this.sbot.gossip.add(multiAddr, console.log)
+        }
+      }
       area.innerHTML = ''
     });
   }
