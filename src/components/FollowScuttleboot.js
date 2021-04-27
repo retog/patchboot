@@ -18,6 +18,7 @@ class FollowScuttleboot extends HTMLElement {
       }, console.log)
       const multiAddr = 'wss://scuttleboot.app~shs:luoZnBKHXeJl4kB39uIkZnQD4L0zl6Vd+Pe75gKS4fo=;net:scuttleboot.app:8088~shs:luoZnBKHXeJl4kB39uIkZnQD4L0zl6Vd+Pe75gKS4fo='
       if (this.sbot.conn?.connect) {
+        this.sbot.conn.remember(multiAddr)
         this.sbot.conn.connect(multiAddr, console.log)
       } else {
         if (this.sbot.gossip?.add) {
